@@ -2,7 +2,6 @@ import { useState } from "react";
 import { baseBackendURI } from "../config";
 import { useAppDispatch, useAppSelector } from "../store";
 import { formatTimestamp } from "../utils/timeFormat";
-
 import { IoReloadOutline } from "react-icons/io5";
 import { fetchUser } from "../store/userSlice";
 
@@ -18,7 +17,7 @@ const EmailPreview = ({ _id }: {_id: string}) => {
   }
 
   const getInvokeComponent = () => {
-    return `<script src="${getInvokUrl()}" height="1" width="1"/>`
+    return `<img src="${getInvokUrl()}" height="1" width="1"/>`
   }
 
   const copyToClipBoard = async() => {
@@ -26,7 +25,7 @@ const EmailPreview = ({ _id }: {_id: string}) => {
       await navigator.clipboard.writeText(getInvokeComponent());
       setCopySuccess("Copied!");
     } catch (err) {
-      setCopySuccess("Failed to copy!");
+      setCopySuccess("Failed!");
       console.error("Error copying text: ", err);
     }
   }
@@ -34,8 +33,7 @@ const EmailPreview = ({ _id }: {_id: string}) => {
 
   const { date, time } = formatTimestamp(email?.createTime ?? 0);
 
-    return(
-        <dialog id={`${_id}-card-modal`} className="modal modal-bottom sm:modal-middle">
+    return(<dialog id={`${_id}-card-modal`} className="modal modal-bottom sm:modal-middle">
           <div className="modal-box">
             <div className="flex justify-between">
               <h3 className="font-bold text-2xl">{email?.label}</h3>
@@ -59,7 +57,6 @@ const EmailPreview = ({ _id }: {_id: string}) => {
                       <tr>
                         <th>Date</th>
                         <th>Time</th>
-                        {/* <th>OS</th> */}
                         <th>Browswe</th>
                       </tr>
                     </thead>
@@ -68,7 +65,6 @@ const EmailPreview = ({ _id }: {_id: string}) => {
                       return <tr key={i.time}>
                         <td>{formatTimestamp(i.time).date}</td>
                         <td>{formatTimestamp(i.time).time}</td>
-                        {/* <td>{i.os}</td> */}
                         <td>{i.browser}</td>
                       </tr>
                     })}
@@ -79,14 +75,12 @@ const EmailPreview = ({ _id }: {_id: string}) => {
             </div>
             <div className="modal-action">
               <form method="dialog">
-                {/* if there is a button in form, it will close the modal */}
                <div className="flex gap-5">
                 <button className="btn">Close</button>
                </div>
               </form>
             </div>
           </div>
-        </dialog>
-        )
+        </dialog>)
 }
 export default EmailPreview;
