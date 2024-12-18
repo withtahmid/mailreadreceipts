@@ -61,9 +61,6 @@ const Dashboard = () => {
                         <EmailCard  _id = {e._id}/> <EmailPreview _id = {e._id}/>
                     </div>
                 })}
-                {tempEmail.length === 0 && (
-                    <h1 className="text-center text-2xl my-20">Dashboard is empty</h1>
-                )}
             </div>
         </div>
     </div>

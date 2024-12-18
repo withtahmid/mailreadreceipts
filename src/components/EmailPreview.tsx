@@ -1,24 +1,29 @@
 import { useState } from "react";
 import { baseBackendURI } from "../config";
-import { useAppSelector } from "../store";
+import { useAppDispatch, useAppSelector } from "../store";
 import { formatTimestamp } from "../utils/timeFormat";
 
-
+import { IoReloadOutline } from "react-icons/io5";
+import { fetchUser } from "../store/userSlice";
 
 const EmailPreview = ({ _id }: {_id: string}) => {
 
   const email = useAppSelector(state => state.user.emails).find(e => e._id === _id);
   const [copySuccess, setCopySuccess] = useState<string>("Copy HTML");
 
- 
-  
+  const dispatch = useAppDispatch();
+
   const getInvokUrl = () => {
-    return `${baseBackendURI}/invoke/${_id}`;
+    return `${baseBackendURI}/${_id}`;
+  }
+
+  const getInvokeComponent = () => {
+    return `<script src="${getInvokUrl()}" height="1" width="1"/>`
   }
 
   const copyToClipBoard = async() => {
     try {
-      await navigator.clipboard.writeText(`<img src="${getInvokUrl()}" height="1" width="1"/>`);
+      await navigator.clipboard.writeText(getInvokeComponent());
       setCopySuccess("Copied!");
     } catch (err) {
       setCopySuccess("Failed to copy!");
@@ -32,14 +37,17 @@ const EmailPreview = ({ _id }: {_id: string}) => {
     return(
         <dialog id={`${_id}-card-modal`} className="modal modal-bottom sm:modal-middle">
           <div className="modal-box">
-            <h3 className="font-bold text-2xl">{email?.label}</h3>
+            <div className="flex justify-between">
+              <h3 className="font-bold text-2xl">{email?.label}</h3>
+              <button onClick={() => dispatch(fetchUser())} className="btn rounded-full text-primary text-xl font-bold"><IoReloadOutline /></button>
+              </div>
             <p className="py-4">Created at: {date}, {time}</p>
             <div className="py-2">
             <kbd onClick={copyToClipBoard} className="btn kbd kbd-md">{copySuccess}</kbd>
             </div>
             <div>
               <div className="mockup-code">
-                <pre ><code> {`<img src="${getInvokUrl()}" height="1" width="1"/>`} </code></pre>
+                <pre ><code> {getInvokeComponent()} </code></pre>
               </div>
             </div>
             <div className="my-2">
@@ -51,7 +59,7 @@ const EmailPreview = ({ _id }: {_id: string}) => {
                       <tr>
                         <th>Date</th>
                         <th>Time</th>
-                        <th>OS</th>
+                        {/* <th>OS</th> */}
                         <th>Browswe</th>
                       </tr>
                     </thead>
@@ -60,7 +68,7 @@ const EmailPreview = ({ _id }: {_id: string}) => {
                       return <tr key={i.time}>
                         <td>{formatTimestamp(i.time).date}</td>
                         <td>{formatTimestamp(i.time).time}</td>
-                        <td>{i.os}</td>
+                        {/* <td>{i.os}</td> */}
                         <td>{i.browser}</td>
                       </tr>
                     })}

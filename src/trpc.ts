@@ -1,6 +1,6 @@
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 // import { AppRouter } from "../../backend/src/routes";
-import { AppRouter } from "./backendTypes/types/src/routes/index"
+import { AppRouter } from "./backendTypes/src/routes/index"
 import { baseBackendURI } from "./config";
 
 const getToken = ()=>{
@@ -19,4 +19,4 @@ export const trpc = createTRPCProxyClient<AppRouter>({
         })
     ],
     transformer: undefined
-}) 
+});

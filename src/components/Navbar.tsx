@@ -1,7 +1,8 @@
 import { FaPlus } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../store";
-import { logout } from "../store/userSlice";
+import { fetchUser, logout } from "../store/userSlice";
 import { changePage } from "../store/currentPageSlice";
+import { IoReloadOutline } from "react-icons/io5";
 const Navbar = () => {
 
 
@@ -53,9 +54,14 @@ const Navbar = () => {
           <a className="btn btn-ghost text-xl">MailReadReceipts</a>
         </div>
         <div className="navbar-end">
-          {isVerified && token !== null && (<button className="btn btn-ghost btn-circle" onClick={plusBtnClick}>
+          {isVerified && token !== null && (
+            <>
+            <button className="btn btn-ghost btn-circle" onClick={plusBtnClick}>
             <FaPlus />
-          </button>)}
+          </button>
+          <button onClick={() => dispatch(fetchUser())} className="btn rounded-full text-xl"><IoReloadOutline /></button>
+            </>
+        )}
         </div>
       </div>
       )

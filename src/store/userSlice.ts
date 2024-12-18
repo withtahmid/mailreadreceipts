@@ -1,18 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { trpc } from "../trpc";
 import { TRPCClientError } from "@trpc/client";
+import { EmailSchemaFrontEnd as EmailSchema} from "../backendTypes/src/models/emailModel";
 
-interface InvokeSchema{
-    time: number;
-    os: string;
-    browser: string;
-}
-export interface EmailSchema{
-    _id: string;
-    label: string;
-    createTime: number;
-    invokes: InvokeSchema[];
-}
 interface State {
     token: string | null;
     isVerified: boolean;
@@ -76,7 +66,7 @@ export const signupAsync = createAsyncThunk<string, { email: string, password: s
     "user/signup",
     async ( {email , password }, { rejectWithValue }) => {
         try {
-            const token = trpc.signup.mutate({email,password});
+            const token = await trpc.signup.mutate({email,password});
             return token;
         } catch (error) {
             if(error instanceof TRPCClientError){
@@ -158,9 +148,9 @@ const userSlice = createSlice({
             localStorage.setItem("mailreadreceiptstoken", action.payload);
         })
 
-        .addCase(fetchUser.pending, (state) => {
-            state.status = "loading";
-        })
+        // .addCase(fetchUser.pending, (state) => {
+        //     state.status = "loading";
+        // })
         .addCase(fetchUser.rejected, (state) => {
             state.status = "failed";
         })
@@ -178,9 +168,9 @@ const userSlice = createSlice({
         .addCase(addEmailAsync.rejected, (state) => {
             state.status = "failed";
         })
-        .addCase(addEmailAsync.fulfilled, (state, action) => {
+        .addCase(addEmailAsync.fulfilled, (state, action: PayloadAction<EmailSchema>) => {
             state.status = "success";
-            state.emails.push(action.payload);
+            state.emails.push(action.payload as EmailSchema);
         })
 
 
